@@ -1,4 +1,11 @@
-# -*- coding: latin-1 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# %%
+"""
+Created on Tue Jun 11 15:28:47 2019
+
+@author: dejan
+"""
 from __future__ import print_function
 import numpy as np
 import os
@@ -28,25 +35,31 @@ def convert_time(t):
 
 def read_WDF(filename, verbose=False):
     '''
-    Reads data from the binary .wdf file
-    and returns it in form of five variables
+    Read data from the binary .wdf file
+    and return it in form of five variables
 
-    Example:
-         >>>spectra, x_values, params, map_params, origins =
-         read_WDF(filename)
+    Example
+    ----------
+    >>> spectra, x_values, params, map_params, origins = read_WDF(filename)
 
-    Input:
-        filename: The complete (relative or absolute) path to the file
+    Input
+    ---------
+    filename: str
+        The complete (relative or absolute) path to the file
 
-    Output:
-        spectra:     numpy array contaiing all the recorded spectra
-        x_values:    numpy array containing the raman shifts
-        params:      dictionary containing measurement parameters
-        map_params:  dictionary containing map parameters
-        origins:     pandas dataframe containing the spatio-temporal
-                     coordinates of each recording.
-                     Note that it has triple column names
-                     (label, data type, data units)
+    Output
+    -----------
+    spectra: numpy array
+        all the recorded spectra
+    x_values: numpy array
+        the raman shifts
+    params: dict
+        dictionary containing measurement parameters
+    map_params: dict
+        dictionary containing map parameters
+    origins: pandas dataframe
+        the spatio-temporal coordinates of each recording.
+        Note that it has triple column names (label, data type, data units)
     '''
 
     DATA_TYPES = ['Arbitrary', 'Spectral', 'Intensity',
@@ -78,7 +91,7 @@ def read_WDF(filename, verbose=False):
                  3: 'LineFocusMapping', 4: 'InvertedRows',
                  5: 'InvertedColumns', 6: 'SurfaceProfile',
                  7: 'XyLine', 68: 'InvertedRows', 128: 'Slice'}
-                # Remember to check this 68
+    # Remember to check this 68
 
     MEASUREMENT_TYPES = ['Unspecified', 'Single', 'Series', 'Map']
 
@@ -153,7 +166,7 @@ def read_WDF(filename, verbose=False):
         params['ApplicationName'] = _read(f, '|S24').decode()
         version = _read(f, np.uint16, count=4)
         params['ApplicationVersion'] = '.'.join(
-                    [str(x) for x in version[0:-1]]) +\
+            [str(x) for x in version[0:-1]]) +\
             ' build ' + str(version[-1])
         params['ScanType'] = SCAN_TYPES[_read(f)]
         params['MeasurementType'] = MEASUREMENT_TYPES[_read(f)]
@@ -180,11 +193,11 @@ def read_WDF(filename, verbose=False):
         print_block_header(name, i)
         f.seek(b_off[i] + 16)
         m_flag = _read(f)
-        map_params['MapAreaType'] = MAP_TYPES[m_flag]#_read(f)]
+        map_params['MapAreaType'] = MAP_TYPES[m_flag]
         _read(f)
-        map_params['InitialCoordinates'] = np.round(_read(f, '<f', count=3),2)
-        map_params['StepSizes'] = np.round(_read(f, '<f', count=3),2)
-        map_params['NbSteps'] = n_x,n_y,n_z = _read(f, np.uint32, count=3)
+        map_params['InitialCoordinates'] = np.round(_read(f, '<f', count=3), 2)
+        map_params['StepSizes'] = np.round(_read(f, '<f', count=3), 2)
+        map_params['NbSteps'] = n_x, n_y, n_z = _read(f, np.uint32, count=3)
         map_params['LineFocusSize'] = _read(f)
     if verbose:
         for key, val in map_params.items():
@@ -275,7 +288,7 @@ def read_WDF(filename, verbose=False):
                 # special case for reading timestamps
             else:
                 origin_values[set_n] = np.round(
-                                        _read(f, '<d', count=nspectra), 2)
+                    _read(f, '<d', count=nspectra), 2)
 
             if params['MeasurementType'] == 'Map':
                 if map_params['MapAreaType'] == 'InvertedRows':
@@ -290,8 +303,8 @@ def read_WDF(filename, verbose=False):
     if verbose:
         print('\n\n\n')
     origins = pd.DataFrame(origin_values.T,
-                        columns=[origin_labels,
-                                 origin_set_dtypes,
-                                 origin_set_units])
-    
+                           columns=[origin_labels,
+                                    origin_set_dtypes,
+                                    origin_set_units])
+
     return (spectra, x_values, params, map_params, origins)

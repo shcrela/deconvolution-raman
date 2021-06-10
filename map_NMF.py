@@ -41,7 +41,7 @@ Third plot: the heatmap of the mixing coefficients
 '''
 #%%
 # -----------------------Choose a file-----------------------------------------
-filename = 'Data/Sirine/carto - 2h_Copy.wdf'
+filename = 'Data/Chloe/cBN20-532streamline-x20-2s-carto1.wdf'
 
 initialization = {'SliceValues': None,  # [100, 1300],  # Use None to count all
                   'NMF_NumberOfComponents': 6,

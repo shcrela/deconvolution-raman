@@ -290,7 +290,7 @@ def create_map_spectra(x=np.arange(150, 250, 0.34), initial_peak_params=[171, 20
 
 
 class NavigationButtons(object):
-    '''This class allows you to visualize multispectral data and
+    """This class allows you to visualize multispectral data and
     navigate trough your spectra simply by clicking on the
     navigation buttons on the graph.
     -------------------
@@ -305,23 +305,28 @@ class NavigationButtons(object):
     Output:
         matplotlib graph with navigation buttons to cycle through spectra
     Example:
-    # Let's say you have a ndarray containing 10 spectra, each 500 points long
-    # base_spectras.shape should give (10, 500)
-    # your sigma.shape should be (500, )
-    # Then let's say you fitted each of your spectra with 3 gaussian peaks
-    # and you want to plot these as well. For each of your ten spectra,
-    # you will have something like:
-    >>>spectra_fitted[i] = multiple_gaussian_function(sigma, *params[i])
+    '''Let's say you have a ndarray containing 10 spectra, each 500 points long
+    base_spectras.shape should give (10, 500)
+    your sigma.shape should be (500, )
+    Then let's say you fitted each of your spectra with 3 gaussian peaks
+    and you want to plot these as well. For each of your ten spectra,
+    you will have something like:'''
+
+    >>> spectra_fitted[i] = multiple_gaussian_function(sigma, *params[i])
+
     # your spectra_fitted should have the same shape as your spectra.
     # Now, let's say you want also to plot each of the gaussian peaks as well
     # for "i"th spectra you will have 3 gaussians
-    >>>for k in range(3):
-    >>>G[i][k] = single_gaussian_function(sigma, *params[i][k])
+
+    >>> for k in range(3):
+    >>> G[i][k] = single_gaussian_function(sigma, *params[i][k])
+
     # At the end, you stack all of this in one ndarray :
-    >>>multiple_curves_to_plot = np.stack((
+
+    >>> multiple_curves_to_plot = np.stack((
             base_spectras, spectra_fitted, G1, G2, G3), axis=-1)
-    >>>NavigationButtons(sigma, multiple_curves_to_plot)
-    '''
+    >>> NavigationButtons(sigma, multiple_curves_to_plot)
+    """
     ind = 0
 
     def __init__(self, sigma, spectra, autoscale_y=False, title='Spectrum', label=False,
